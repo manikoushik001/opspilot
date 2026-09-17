@@ -30,21 +30,29 @@ venv/
 .venv/
 ENV/
 
-# Node / Next.js
+# Databases
+*.db
+*.sqlite
+*.sqlite3
+backend/*.db
+opspilot.db
+
+# Node & Next.js
+node_modules/
 frontend/node_modules/
 frontend/.next/
+.next/
 frontend/out/
 frontend/build/
 .npm
 *.tsbuildinfo
 next-env.d.ts
+frontend/next-env.d.ts
 
 # Environment & Secrets
 .env
-.env.local
-.env.development.local
-.env.test.local
-.env.production.local
+.env.*
+!.env.example
 
 # IDE & OS
 .vscode/

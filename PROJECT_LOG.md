@@ -4,8 +4,8 @@ This log tracks all architectural and engineering decisions made during the desi
 
 ---
 
-### Decision Log Entry 001
-- **Date**: 2026-09-17
+### Decision Log Entry 001: Modular Monolith vs Microservices
+- **Phase**: Architecture Design
 - **Context**: Initial system architecture and repository setup for multi-tenant SaaS application OpsPilot.
 - **Problem**: Need a robust, maintainable, secure architecture that enforces strict multi-tenancy, deterministic AI response generation, vector search (RAG), background processing, and modern frontend capabilities.
 - **Options**:
@@ -18,8 +18,8 @@ This log tracks all architectural and engineering decisions made during the desi
 
 ---
 
-### Decision Log Entry 002
-- **Date**: 2026-09-17
+### Decision Log Entry 002: Multi-Tenant Isolation Strategy
+- **Phase**: Data Modeling & Security
 - **Context**: Multi-tenant isolation strategy.
 - **Problem**: Preventing Business A from accessing or mutating Business B's data at the database and API levels.
 - **Options**:
@@ -33,8 +33,8 @@ This log tracks all architectural and engineering decisions made during the desi
 
 ---
 
-### Decision Log Entry 003
-- **Date**: 2026-09-17
+### Decision Log Entry 003: AI & RAG Safety Framework
+- **Phase**: AI Engineering
 - **Context**: AI and RAG Safety Framework ("AI proposes, Application validates, Business rules decide, System executes").
 - **Problem**: Preventing LLM hallucinations, SQL injection, arbitrary code execution, and prompt leakage.
 - **Options**:
@@ -47,8 +47,8 @@ This log tracks all architectural and engineering decisions made during the desi
 
 ---
 
-### Decision Log Entry 004
-- **Date**: 2026-09-17
+### Decision Log Entry 004: Vector Database and Embedding Storage
+- **Phase**: RAG & Search Architecture
 - **Context**: Vector Database and Embedding Storage.
 - **Problem**: Storing and searching high-dimensional embeddings for knowledge base documents.
 - **Options**:
