@@ -140,7 +140,7 @@ class MockLLMProvider(LLMProvider):
                 "is_injection_suspected": False,
                 "requires_human_escalation": True
             }
-        elif any(w in msg for w in ["decide tomorrow", "think about it", "let you know", "follow up", "next week", "later"]):
+        elif any(w in msg for w in ["decide tomorrow", "think about it", "let you know", "follow up", "following up", "follow-up", "next week", "later"]):
             return {
                 "intent": "FOLLOW_UP",
                 "confidence": 0.91,
