@@ -61,6 +61,9 @@ frontend/next-env.d.ts
 *.swo
 .DS_Store
 Thumbs.db
+~$*.pptx
+~$*.docx
+*.tmp
 
 # Uploads / Local Storage
 backend/uploads/
