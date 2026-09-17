@@ -4,16 +4,13 @@ databases:
   - name: opspilot-postgres
     databaseName: opspilot
     user: opspilot_user
+    plan: free
 
 services:
-  - type: redis
-    name: opspilot-redis
-    ipAllowList: []
-    plan: starter
-
   - type: web
     name: opspilot-backend
     env: docker
+    plan: free
     dockerfilePath: backend/Dockerfile
     dockerContext: backend
     healthCheckPath: /api/v1/health
@@ -29,60 +26,14 @@ services:
           name: opspilot-postgres
           property: connectionString
       - key: REDIS_URL
-        fromService:
-          type: redis
-          name: opspilot-redis
-          property: connectionString
+        value: "redis://localhost:6379/0"
       - key: CELERY_BROKER_URL
-        fromService:
-          type: redis
-          name: opspilot-redis
-          property: connectionString
+        value: "redis://localhost:6379/0"
       - key: CELERY_RESULT_BACKEND
-        fromService:
-          type: redis
-          name: opspilot-redis
-          property: connectionString
+        value: "redis://localhost:6379/0"
       - key: SECRET_KEY
         generateValue: true
       - key: LLM_PROVIDER
         value: mock
       - key: BACKEND_CORS_ORIGINS
         value: '["https://opspilott.vercel.app"]'
-
-  - type: worker
-    name: opspilot-worker
-    env: docker
-    dockerfilePath: backend/Dockerfile
-    dockerContext: backend
-    dockerCommand: celery -A app.workers.celery_app.celery_app worker --loglevel=info
-    envVars:
-      - key: ENVIRONMENT
-        value: production
-      - key: DATABASE_URL
-        fromDatabase:
-          name: opspilot-postgres
-          property: connectionString
-      - key: DATABASE_URL_SYNC
-        fromDatabase:
-          name: opspilot-postgres
-          property: connectionString
-      - key: REDIS_URL
-        fromService:
-          type: redis
-          name: opspilot-redis
-          property: connectionString
-      - key: CELERY_BROKER_URL
-        fromService:
-          type: redis
-          name: opspilot-redis
-          property: connectionString
-      - key: CELERY_RESULT_BACKEND
-        fromService:
-          type: redis
-          name: opspilot-redis
-          property: connectionString
-      - key: SECRET_KEY
-        generateValue: true
-      - key: LLM_PROVIDER
-        value: mock
