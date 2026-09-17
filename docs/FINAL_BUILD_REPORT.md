@@ -8,7 +8,7 @@
 
 ## 1. Executive Summary & Features Completed
 
-OpsPilot has been constructed as a complete, portfolio-quality, multi-tenant SaaS MVP demonstrating rigorous backend, frontend, database, AI/RAG, security, and systems engineering:
+OpsPilot is a multi-tenant SaaS application demonstrating backend, frontend, database, AI/RAG, security, and systems engineering:
 
 - **Authentication & RBAC**: Registration, login, token refresh, password hashing with bcrypt, JWT authorization, and `OWNER` / `STAFF` roles.
 - **Strict Multi-Tenancy**: Guaranteed tenant boundary isolation via dependency injection on every database query and API endpoint.
@@ -95,27 +95,39 @@ audit_logs (id, business_id, user_id, action, resource_type, resource_id, metada
 ```
 ============================= test session starts =============================
 platform win32 -- Python 3.14.6, pytest-9.1.1
-collected 17 items
+collected 29 items
 
-app/tests/test_analytics.py::test_analytics_overview_endpoint PASSED     [  5%]
-app/tests/test_auth.py::test_register_and_login_flow PASSED              [ 11%]
-app/tests/test_auth.py::test_invalid_login PASSED                        [ 17%]
-app/tests/test_conversations.py::test_conversation_lifecycle_and_messages PASSED [ 23%]
-app/tests/test_customers.py::test_customer_crud_operations PASSED        [ 29%]
-app/tests/test_followups.py::test_followup_crud_and_status PASSED        [ 35%]
-app/tests/test_rag.py::test_scenario_1_fee_inquiry PASSED                [ 41%]
-app/tests/test_rag.py::test_scenario_2_nonexistent_course_escalates PASSED [ 47%]
-app/tests/test_rag.py::test_scenario_3_refund_request PASSED             [ 52%]
-app/tests/test_rag.py::test_scenario_4_ai_followup_proposal_and_execution PASSED [ 58%]
-app/tests/test_rag.py::test_scenario_5_prompt_injection_rejected PASSED  [ 64%]
-app/tests/test_security.py::test_health_check_unauthenticated PASSED     [ 70%]
-app/tests/test_security.py::test_unauthorized_endpoints_reject_invalid_token PASSED [ 76%]
-app/tests/test_security.py::test_staff_role_cannot_access_owner_only_resources PASSED [ 82%]
-app/tests/test_tenant_isolation.py::test_cross_tenant_customer_access_blocked PASSED [ 88%]
-app/tests/test_tenant_isolation.py::test_tenant_spoofing_header_rejected PASSED [ 94%]
+app/tests/test_adversarial_security.py::test_refresh_token_security_and_validation PASSED [  3%]
+app/tests/test_adversarial_security.py::test_upload_path_traversal_sanitization PASSED [  6%]
+app/tests/test_adversarial_security.py::test_cross_tenant_ai_action_execution_blocked PASSED [ 10%]
+app/tests/test_adversarial_security.py::test_adversarial_prompt_injection_detection PASSED [ 13%]
+app/tests/test_adversarial_security.py::test_deleted_document_excluded_from_rag PASSED [ 17%]
+app/tests/test_ai_intents.py::test_all_eight_intents_recognized PASSED   [ 20%]
+app/tests/test_ai_intents.py::test_action_suggestion_rules PASSED        [ 24%]
+app/tests/test_analytics.py::test_analytics_overview_endpoint PASSED     [ 27%]
+app/tests/test_auth.py::test_register_and_login_flow PASSED              [ 31%]
+app/tests/test_auth.py::test_invalid_login PASSED                        [ 34%]
+app/tests/test_conversations.py::test_conversation_lifecycle_and_messages PASSED [ 37%]
+app/tests/test_customers.py::test_customer_crud_operations PASSED        [ 41%]
+app/tests/test_documents.py::test_knowledge_document_lifecycle PASSED    [ 44%]
+app/tests/test_documents.py::test_unsupported_file_upload_rejected PASSED [ 48%]
+app/tests/test_extended_tenant_isolation.py::test_cross_tenant_conversation_isolation PASSED [ 51%]
+app/tests/test_extended_tenant_isolation.py::test_cross_tenant_followup_isolation PASSED [ 55%]
+app/tests/test_extended_tenant_isolation.py::test_cross_tenant_audit_logs_isolation PASSED [ 58%]
+app/tests/test_followups.py::test_followup_crud_and_status PASSED        [ 62%]
+app/tests/test_rag.py::test_scenario_1_fee_inquiry PASSED                [ 65%]
+app/tests/test_rag.py::test_scenario_2_nonexistent_course_escalates PASSED [ 68%]
+app/tests/test_rag.py::test_scenario_3_refund_request PASSED             [ 72%]
+app/tests/test_rag.py::test_scenario_4_ai_followup_proposal_and_execution PASSED [ 75%]
+app/tests/test_rag.py::test_scenario_5_prompt_injection_rejected PASSED  [ 79%]
+app/tests/test_security.py::test_health_check_unauthenticated PASSED     [ 82%]
+app/tests/test_security.py::test_unauthorized_endpoints_reject_invalid_token PASSED [ 86%]
+app/tests/test_security.py::test_staff_role_cannot_access_owner_only_resources PASSED [ 89%]
+app/tests/test_tenant_isolation.py::test_cross_tenant_customer_access_blocked PASSED [ 93%]
+app/tests/test_tenant_isolation.py::test_tenant_spoofing_header_rejected PASSED [ 96%]
 app/tests/test_tenant_isolation.py::test_rag_vector_search_tenant_isolation PASSED [100%]
 
-============================= 17 passed in 7.37s ==============================
+============================= 29 passed in 18.98s =============================
 ```
 
 ### 2. AI Evaluation Benchmark
@@ -125,8 +137,8 @@ app/tests/test_tenant_isolation.py::test_rag_vector_search_tenant_isolation PASS
 ============================================================
   Total Test Cases:            9
   Intent Accuracy:             100.0% (9/9)
-  Escalation Accuracy:         88.9% (8/9)
-  Keyword / Grounding Match:   77.8% (7/9)
+  Escalation Accuracy:         100.0% (9/9)
+  Keyword / Grounding Match:   100.0% (9/9)
 ============================================================
 ```
 

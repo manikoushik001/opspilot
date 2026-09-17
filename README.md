@@ -1,7 +1,7 @@
 # OpsPilot
 
-> **AI-powered customer operations for small businesses.**  
-> A serious, portfolio-quality, multi-tenant SaaS application built with Python FastAPI, PostgreSQL + pgvector, Redis, Celery, and Next.js 14.
+> **AI-powered customer operations platform for service businesses.**  
+> A multi-tenant SaaS application featuring grounded RAG, human escalation workflows, and schema-validated AI actions built with FastAPI, PostgreSQL + pgvector, Redis, Celery, and Next.js 14.
 
 ---
 
@@ -61,14 +61,14 @@ npm run dev
 
 ---
 
-## 🔑 Demo Credentials (Fictional Demo Data)
+## 🔑 Demo Credentials (Fictional Demo Accounts)
 
-OpsPilot includes a pre-seeded fictional demo organization: **"Demo Learning Center"**.
+OpsPilot includes a pre-seeded fictional demo organization: **"Demo Learning Center"** (for local testing & demonstration only).
 
 | Role | Email | Password | Access Level |
 |---|---|---|---|
-| **Business Owner** | `owner@demolearning.com` | `password123` | Full access: Settings, Knowledge Base, Analytics, Customers, Audit Logs |
-| **Operations Staff** | `staff@demolearning.com` | `password123` | Operational access: Conversations, Customer inbox, Follow-up tasks |
+| **Business Owner** | `owner@demolearning.com` | `password123` | Full administrative access: Settings, Knowledge Base, Analytics, Customers, Audit Logs |
+| **Operations Staff** | `staff@demolearning.com` | `password123` | Operational access: Conversations inbox, Customer management, Follow-up tasks |
 
 ---
 
@@ -79,13 +79,13 @@ OpsPilot includes a pre-seeded fictional demo organization: **"Demo Learning Cen
 cd backend
 python -m pytest -v app/tests
 ```
-**Results**: 17 passed (100% pass rate) covering auth, cross-tenant isolation, customer CRUD, conversation lifecycle, RAG scenarios 1–6, follow-ups, analytics, and security.
+**Results**: `29 passed` (100% pass rate) covering JWT lifecycle, refresh token rotation, RBAC, cross-tenant isolation, path traversal defense, customer CRUD, conversation lifecycle, grounded RAG retrieval, AI action proposal validation, prompt injection defense, follow-ups, and analytics.
 
 ### Run AI & RAG Evaluation Suite
 ```bash
 python evaluation/run_eval.py
 ```
-**Results**: Evaluates golden test dataset across 7 categories (Answerable, Unanswerable, Ambiguous, Sensitive, Prompt Injection, Conflicting Info, Hallucination Trap).
+**Results**: `9/9 benchmark cases passed` (100.0% Intent Accuracy, 100.0% Escalation Accuracy, 100.0% Grounding Match) across Answerable, Unanswerable, Ambiguous, Sensitive, Prompt Injection, and Hallucination Trap scenarios.
 
 ### Run Frontend Production Build
 ```bash
