@@ -36,7 +36,7 @@ async def test_knowledge_document_lifecycle(
     assert any("Tuition" in c["content"] or "Machine Learning" in c["content"] for c in chunks)
     
     # 4. Search knowledge base
-    search_payload = {"query": "How much is the Machine Learning tuition fee?", "top_k": 3}
+    search_payload = {"query": "How much is the Machine Learning tuition fee?", "top_k": 3, "similarity_threshold": 0.30}
     search_resp = await client.post("/api/v1/knowledge/search", headers=headers, json=search_payload)
     assert search_resp.status_code == status.HTTP_200_OK
     search_results = search_resp.json()

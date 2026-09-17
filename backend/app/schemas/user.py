@@ -24,6 +24,10 @@ class Token(BaseModel):
     token_type: str = "bearer"
 
 
+class TokenRefreshRequest(BaseModel):
+    refresh_token: str
+
+
 class TokenPayload(BaseModel):
     sub: Optional[str] = None
     exp: Optional[int] = None

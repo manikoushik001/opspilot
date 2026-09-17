@@ -6,7 +6,7 @@ from sqlalchemy.orm import selectinload
 
 from app.core.database import get_db
 from app.core.security import decode_token, create_access_token
-from app.schemas.user import UserCreate, UserLogin, UserOut, Token, BusinessMembershipOut
+from app.schemas.user import UserCreate, UserLogin, UserOut, Token, TokenRefreshRequest, BusinessMembershipOut
 from app.models.user import User
 from app.models.membership import BusinessMember
 from app.models.business import Business
@@ -48,8 +48,8 @@ async def login(login_data: UserLogin, db: AsyncSession = Depends(get_db)):
 
 
 @router.post("/refresh", response_model=Token)
-async def refresh_token(token_data: dict, db: AsyncSession = Depends(get_db)):
-    refresh = token_data.get("refresh_token")
+async def refresh_token(req: TokenRefreshRequest, db: AsyncSession = Depends(get_db)):
+    refresh = req.refresh_token
     if not refresh:
         raise HTTPException(status_code=400, detail="Missing refresh token.")
 

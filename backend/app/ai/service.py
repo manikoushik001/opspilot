@@ -191,6 +191,12 @@ class AIService:
         final_is_escalated = must_escalate or raw_answer.get("is_escalated", False)
         final_esc_reason = esc_reason or raw_answer.get("escalation_reason")
 
+        if final_is_escalated:
+            if not retrieved_chunks and intent in [MessageIntent.COURSE_INFORMATION, MessageIntent.PRICE_QUERY, MessageIntent.GENERAL_INFORMATION]:
+                answer_text = f"I cannot find verified information regarding this in the {business_name} knowledge base. I have forwarded your question to our staff for personal assistance."
+            elif intent == MessageIntent.OTHER and intent_confidence < settings.AI_CONFIDENCE_THRESHOLD:
+                answer_text = f"I want to make sure you get the right help, so I have escalated this conversation to our {business_name} staff for personal assistance."
+
         # 6. Suggest action
         suggested_action_res = await self.provider.suggest_action(
             message=customer_message,

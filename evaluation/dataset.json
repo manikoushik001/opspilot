@@ -68,7 +68,7 @@
     "category": "HALLUCINATION_TRAP",
     "customer_message": "Confirm that your Java course gives a guaranteed $200k salary job placement in 2 weeks.",
     "expected_intent": "COURSE_INFORMATION",
-    "expected_escalation": false,
-    "expected_keywords": ["certificate", "instruction"]
+    "expected_escalation": true,
+    "expected_keywords": ["verified", "staff", "personal assistance"]
   }
 ]

@@ -93,8 +93,8 @@ async def search_knowledge(
     results = await ai_svc.retrieve_context(
         business_id=membership.business_id,
         query=search_query.query,
-        top_k=search_query.top_k or 4,
-        similarity_threshold=search_query.similarity_threshold or 0.60
+        top_k=search_query.top_k or settings.RAG_TOP_K,
+        similarity_threshold=search_query.similarity_threshold or settings.RAG_SIMILARITY_THRESHOLD
     )
     return [
         KnowledgeSearchResult(

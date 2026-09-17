@@ -58,23 +58,31 @@ class MockLLMProvider(LLMProvider):
 
         # Concept clusters
         clusters = {
-            "course": (0, 100, ["java", "python", "javascript", "react", "fullstack", "programming", "syllabus", "masterclass", "curriculum"]),
+            "course": (0, 100, ["java", "python", "javascript", "react", "fullstack", "programming", "syllabus", "masterclass", "curriculum", "course", "courses", "class", "classes"]),
             "price": (100, 200, ["fee", "fees", "price", "pricing", "cost", "priced", "tuition", "450", "75", "dollar", "payment", "plan"]),
             "refund": (200, 300, ["refund", "refunds", "cancel", "cancellation", "credit", "money", "policy", "return"]),
-            "timing": (300, 400, ["weekend", "saturday", "sunday", "hours", "timings", "timing", "open", "time", "schedule", "pm", "am"]),
+            "timing": (300, 400, ["weekend", "saturday", "sunday", "hours", "timings", "timing", "open", "closing", "schedule", "pm", "am", "weekday", "weekdays"]),
             "appointment": (400, 500, ["appointment", "tour", "visit", "book", "meet", "demo"]),
         }
 
+        # Token hashing for general vocabulary
+        stopwords = {"what", "is", "the", "for", "in", "at", "and", "a", "an", "of", "to", "on", "it", "our", "do", "you", "am"}
+
         # Boost matching concept dimensions
         for cname, (start_idx, end_idx, kw_list) in clusters.items():
-            match_count = sum(1 for tok in tokens if any(kw in tok or tok in kw for kw in kw_list))
+            match_count = 0
+            for tok in tokens:
+                if tok in stopwords or len(tok) < 3:
+                    continue
+                for kw in kw_list:
+                    if kw == tok or (len(tok) >= 4 and tok.startswith(kw)) or (len(kw) >= 4 and kw.startswith(tok)):
+                        match_count += 1
+                        break
             if match_count > 0:
                 boost = match_count * 8.0
                 for i in range(start_idx, end_idx):
                     vec[i] += boost / (end_idx - start_idx)
 
-        # Token hashing for general vocabulary
-        stopwords = {"what", "is", "the", "for", "in", "at", "and", "a", "an", "of", "to", "on", "it", "our", "do", "you"}
         for token in tokens:
             if token in stopwords:
                 continue
@@ -289,6 +297,8 @@ class OpenAILLMProvider(LLMProvider):
 
     async def create_embedding(self, text: str) -> List[float]:
         if not self.api_key:
+            if settings.ENVIRONMENT == "production":
+                raise RuntimeError("CRITICAL: OPENAI_API_KEY is not configured in production environment.")
             return await MockLLMProvider().create_embedding(text)
         async with httpx.AsyncClient(timeout=30.0) as client:
             resp = await client.post(
@@ -302,6 +312,8 @@ class OpenAILLMProvider(LLMProvider):
 
     async def classify_intent(self, message: str) -> Dict[str, Any]:
         if not self.api_key:
+            if settings.ENVIRONMENT == "production":
+                raise RuntimeError("CRITICAL: OPENAI_API_KEY is not configured in production environment.")
             return await MockLLMProvider().classify_intent(message)
         async with httpx.AsyncClient(timeout=30.0) as client:
             resp = await client.post(
@@ -328,6 +340,8 @@ class OpenAILLMProvider(LLMProvider):
         business_name: str
     ) -> Dict[str, Any]:
         if not self.api_key:
+            if settings.ENVIRONMENT == "production":
+                raise RuntimeError("CRITICAL: OPENAI_API_KEY is not configured in production environment.")
             return await MockLLMProvider().generate_rag_answer(message, context_chunks, business_name)
         
         context_str = "\n\n---\n\n".join([
@@ -361,6 +375,8 @@ class OpenAILLMProvider(LLMProvider):
         conversation_history: Optional[List[Dict[str, str]]] = None
     ) -> Dict[str, Any]:
         if not self.api_key:
+            if settings.ENVIRONMENT == "production":
+                raise RuntimeError("CRITICAL: OPENAI_API_KEY is not configured in production environment.")
             return await MockLLMProvider().suggest_action(message, intent, conversation_history)
         
         async with httpx.AsyncClient(timeout=30.0) as client:
@@ -384,6 +400,11 @@ class OpenAILLMProvider(LLMProvider):
 
 def get_llm_provider() -> LLMProvider:
     provider = settings.LLM_PROVIDER.lower()
-    if provider == "openai" and settings.LLM_API_KEY:
+    if provider == "openai":
+        if not settings.LLM_API_KEY:
+            if settings.ENVIRONMENT == "production":
+                raise RuntimeError("CRITICAL: LLM_PROVIDER is configured as 'openai' in production but LLM_API_KEY is missing.")
+            logger.warning("LLM_PROVIDER is set to 'openai' but LLM_API_KEY is missing. Using MockLLMProvider for local development.")
+            return MockLLMProvider()
         return OpenAILLMProvider()
     return MockLLMProvider()

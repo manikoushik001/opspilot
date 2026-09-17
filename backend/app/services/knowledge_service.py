@@ -50,7 +50,12 @@ class KnowledgeService:
         file: UploadFile
     ) -> KnowledgeDocument:
         os.makedirs(settings.LOCAL_STORAGE_DIR, exist_ok=True)
-        filename = file.filename or "uploaded_doc.txt"
+        # Sanitize filename against path traversal
+        raw_name = file.filename or "uploaded_doc.txt"
+        clean_name = os.path.basename(raw_name).replace("..", "").replace("/", "").replace("\\", "")
+        if not clean_name:
+            clean_name = "uploaded_doc.txt"
+        filename = clean_name
         file_ext = os.path.splitext(filename)[1].lower()
         mime_type = file.content_type or "text/plain"
 
